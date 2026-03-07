@@ -1,24 +1,29 @@
-# fullstack app
+# Payment Dashboard fullstack app
 
-Explain your service in here. This is fulltsack project related Payment using golang as backend and nuxt as frontend....
+This is a fulltsack project for Payment Dashboard using Golang as backend and Quasar-Vue.js as frontend.
 
-list of tools version of your machine:
+List of tools version used for development:
 
 ```bash
-go version go1.25.5 darwin/arm64
-node v24.13.1
+go version go1.26.0-X:nodwarf5 linux/amd64
+node v24.14.0
+npm 11.11.0
 ```
 
 Install all related requirements:
 
-```bash
-Add here
+```
+N/A
 ```
 
 How to run backend server on local:
 
 ```bash
-Add here
+cd backend
+cp env.sample .env
+make dep
+make gen-secret
+make run
 ```
 
 How to run backend server on production build:
@@ -30,7 +35,9 @@ Add here
 How to run frontend on local:
 
 ```bash
-Add here
+cd frontend
+npm i
+npm run dev
 ```
 
 How to run frontend on production build:
@@ -39,18 +46,14 @@ How to run frontend on production build:
 Add here
 ```
 
-To checking openapi documentations, you can visit this url after backend running.
+To checking openapi documentations, you can visit this url after backend running:
 
-```bash
+```
 Add here
 ```
 
 Login to frontend by visiting:
 
 ```
-Add here
+http://localhost:5000
 ```
-
-evidences: Add video evidences of your service
-see backend [README.md](backend/README.md)
-see frontend [README.md](frontend/README.md)
