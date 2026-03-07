@@ -135,8 +135,8 @@ paths:
           schema:
             type: string
           description: payment id
-      security:
-        - bearerAuth: []
+      # security:
+      #   - bearerAuth: []
       responses:
         "200":
           $ref: '#/components/responses/PaymentListResponse'

@@ -6,7 +6,6 @@ package openapigen
 import (
 	"bytes"
 	"compress/gzip"
-	"context"
 	"encoding/base64"
 	"fmt"
 	"net/http"
@@ -18,10 +17,6 @@ import (
 	"github.com/getkin/kin-openapi/openapi3"
 	"github.com/go-chi/chi/v5"
 	"github.com/oapi-codegen/runtime"
-)
-
-const (
-	BearerAuthScopes = "bearerAuth.Scopes"
 )
 
 // Error defines model for Error.
@@ -134,12 +129,6 @@ func (siw *ServerInterfaceWrapper) PostDashboardV1AuthLogin(w http.ResponseWrite
 func (siw *ServerInterfaceWrapper) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request) {
 
 	var err error
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, BearerAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetDashboardV1PaymentsParams
@@ -305,22 +294,22 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/6RW227bRhD9lcW0DzFKi1KTh4BAgbq3IIUDGG3dPrhGteaOpE25l8wunaiG/r2YXUoi",
-	"TQo2kieJ3LmcM2dmuA9QO+OdRRsDVA/gJUmDESk9BUeRfxWGmrSP2lmo4EdnjDwPyLYRlWArsdLYqDAT",
-	"fOis8DJGJBsqsTyvCdnuHxmX4oUnXOlPYnm+FN8JjnsmltK41vKhdWJwLkN99reFAjTn/dAibaEAKw1C",
-	"lcEVEOoNGsko8ZM0vuGjXkooIG59so+k7Rp2u10BhME7GzCxvHRrbX/r3vCL2tmINjGX3je6lsy8fB+Y",
-	"/kMv49eEK6jgq/JYxDKfhvI6IOVkw+oRxpasiO5ftEJaJdqAJLRdOTIpD+wKuJJbgzZe6hA/C5gn55Gi",
-	"xk7UFC391xFNeAp7l56RdMWTRHILu+MLd/ce6zhFsHMWDJ4jXFvZxo0j/R+qn4kcPYNJJ2UC2iZ/tJGN",
-	"UCWirTGStlDBOx2CtmvhuIT3stEqVxYKuJdN21VNIVSv5osCDIYg14z/ehi1EuZUpETxeZpnehM1uTjm",
-	"0s6KldQNKk61z1oTKjaQTYBjvsT/ULOhqJlVr+sTwU4dbSOuuf96lPsD8nz24/Hh6fnQamIpbjKMY5bb",
-	"UYMcmnlMIc/9EJlsdI3fd8+z2pkxggJ64109QJ4cqEDJiOdRG5zy0WqYaDFlZJDqjXyM6V33VlxM+YQo",
-	"YxuGHtwbDfJyLIQnV2OubsH1zeJPFnZUurRERnVDI3XDf0ZYyDU4eZDFHJ9MDHQBAeuWdNz+zk2YU96h",
-	"JCRu4+PTL/u6//rXH/tFzJHy6ZHgJkafh4K3XAKhYy7s9o27lHZ94b24uHrLQ4sU8sgsZvPZnKE7j1Z6",
-	"DRW8nM1nL6EAL+MmoSqVDJs7J0mV94uSW7pseJmnkrmQZOTCpal7q3g5uRB/2jv9uWBCaf1D7moM8Qen",
-	"tl+wa09r42UIHx2paRX6M5Vj9DxuJ9fu0SVSi4+/at/O56fW1cGuHH76dgW8mi+e9hpv9NQ1h6WcooqP",
-	"Om5EoiK+EQcqbDmUrf91WuOEZm+wL9nV3rwYXFZupkEfTcp0X9gVj28zeXyFW4kOiHjx9PSenbqT5F3Q",
-	"/16MpH4MYJ9WqxNB08HpgLefI/zUBeML5e+WRpKivy5ubhlirzt0iL1yh+4Di3S/F7KlplsbVVk2rpbN",
-	"xoVYvZ6/nsPudvd/AAAA//+YrKvUtAoAAA==",
+	"H4sIAAAAAAAC/6xW227bRhD9lcW0DzFKi1KTh4BAgbq3IIUDGG3dPqRGteaOpE25l8wunaiG/r2YXUoi",
+	"TQo23D5J5M7lnDkzw72H2hnvLNoYoLoHL0kajEjpKTiK/Ksw1KR91M5CBd87Y+R5QLaNqARbiZXGRoWZ",
+	"4ENnhZcxItlQieV5Tch2f8m4FC884Up/FsvzpfhGcNwzsZTGtZYPrRODcxnqsz8tFKA578cWaQsFWGkQ",
+	"qgyugFBv0EhGiZ+l8Q0f9VJCAXHrk30kbdew2+0KIAze2YCJ5aVba/tL94Zf1M5GtIm59L7RtWTm5YfA",
+	"9O97Gb8kXEEFX5THIpb5NJTXASknG1aPMLZkRXR/oxXSKtEGJKHtypFJeWBXwJXcGrTxUof4LGCenEeK",
+	"GjtRU7T0X0c04THsXXpG0hVPEskt7I4v3O0HrOMUwc5ZMHiOcG1lGzeO9D+ofiRy9AQmnZQJaJv80UY2",
+	"QpWItsZI2kIF73QI2q6F4xLeyUarXFko4E42bVc1hVC9mi8KMBiCXDP+62HUSphTkRLFp2me6U3U5OKY",
+	"SzsrVlI3qDjVPmtNqNhANgGO+RL/Q82GomZWva5PBDt1tI245v7rUe4PyNPZj8eHp+djq4mleJ9hHLPc",
+	"jBrk0MxjCnnuh8hko2v8tnue1c6MERTQG+/qHvLkQAVKRjyP2uCUj1bDRIspI4NUb+RDTO+6t+JiyidE",
+	"Gdsw9ODeaJCXYyE8uRpzdQuubxZ/srCj0qUlMqobGqkb/jPCQq7ByYMs5vhkYqALCFi3pOP2V27CnPIW",
+	"JSFxGx+fftrX/ec/ftsvYo6UT48ENzH6PBS85RIIHXNht2/cpbTrC+/FxdVbHlqkkEdmMZvP5gzdebTS",
+	"a6jg5Ww+ewkFeBk3CVWpZNjcOkmqvFuU3NJlw8s8lcyFJCMXLk3dW8XLyYX4w97p9wUTSusfcldjiN85",
+	"tf0Pu/a0Nl6G8MmRmlahP1M5Rs/jZnLtHl0itfjwq/b1fH5qXR3syuGnb1fAq/nica/xRk9dc1jKKar4",
+	"pONGJCriK3GgwpZD2fpfpzVOaPYG+5Jd7c2LwWXl/TToo0mZ7gu74uFtJo+vcCvRAREvHp/es1N3krwL",
+	"+t+LkdQPAezTanUiaDo4HfDmOcJPXTD+N/l1iL16hu4LinS3V6qlptsLVVk2rpbNxoVYvZ6/nsPuZvdv",
+	"AAAA//8wKAValQoAAA==",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
