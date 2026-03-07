@@ -33,5 +33,22 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
+  Router.beforeEach((to) => {
+    if (to.name === 'NotFound') {
+      return;
+    }
+
+    if (to.meta.requiresAuth && !isAuthenticated()) {
+      return { name: 'Login' };
+    } else if (!to.meta.requiresAuth && isAuthenticated()) {
+      return { name: 'Home' };
+    }
+  });
+
   return Router;
 });
+
+// Dummy auth check
+function isAuthenticated() {
+  return localStorage.getItem('auth') === 'true';
+}
