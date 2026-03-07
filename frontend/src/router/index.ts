@@ -6,6 +6,7 @@ import {
   createWebHistory,
 } from 'vue-router';
 import routes from './routes';
+import { useAuthStore } from '../stores/auth';
 
 /*
  * If not building with SSR mode, you can
@@ -38,17 +39,14 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       return;
     }
 
-    if (to.meta.requiresAuth && !isAuthenticated()) {
+    const auth = useAuthStore();
+
+    if (to.meta.requiresAuth && !auth.isAuthenticated) {
       return { name: 'Login' };
-    } else if (!to.meta.requiresAuth && isAuthenticated()) {
+    } else if (!to.meta.requiresAuth && auth.isAuthenticated) {
       return { name: 'Home' };
     }
   });
 
   return Router;
 });
-
-// Dummy auth check
-function isAuthenticated() {
-  return localStorage.getItem('auth') === 'true';
-}
