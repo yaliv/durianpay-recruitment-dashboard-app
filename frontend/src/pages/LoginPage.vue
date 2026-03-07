@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <h2>Login</h2>
-    <button @click="login">Login</button>
+  <div style="padding-left: 4em">
+    <h3>Login</h3>
+    <q-btn color="primary" label="Login" @click="login" />
   </div>
 </template>
 

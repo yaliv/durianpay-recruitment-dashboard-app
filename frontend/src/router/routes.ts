@@ -10,7 +10,8 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     name: 'Home',
     meta: { requiresAuth: true },
-    component: () => import('pages/HomePage.vue'),
+    component: () => import('layouts/InternalLayout.vue'),
+    children: [{ path: '', component: () => import('pages/HomePage.vue') }],
   },
 
   // Always leave this as last one,

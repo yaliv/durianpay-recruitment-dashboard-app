@@ -1,19 +1,23 @@
 <template>
-  <div>
-    <h2>Welcome!</h2>
-    <button @click="logout">Logout</button>
-  </div>
+  <q-page padding>
+    <h3>Welcome!</h3>
+    <table class="text-subtitle1">
+      <tbody>
+        <tr>
+          <td class="text-bold q-pr-sm">Email:</td>
+          <td>{{ auth.user?.email }}</td>
+        </tr>
+        <tr>
+          <td class="text-bold q-pr-sm">Role:</td>
+          <td>{{ auth.user?.role }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </q-page>
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
 import { useAuthStore } from 'stores/auth';
 
-const router = useRouter();
 const auth = useAuthStore();
-
-async function logout() {
-  auth.logout();
-  return router.push('/login');
-}
 </script>
