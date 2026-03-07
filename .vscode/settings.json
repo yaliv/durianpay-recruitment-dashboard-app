@@ -1,0 +1,11 @@
+{
+  "oxc.fmt.configPath": "frontend/.oxfmtrc.json",
+  "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "file",
+  "[typescript]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  },
+  "[vue]": {
+    "editor.defaultFormatter": "oxc.oxc-vscode"
+  }
+}
