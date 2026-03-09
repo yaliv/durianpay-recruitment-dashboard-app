@@ -1,8 +1,8 @@
 package entity
 
 type User struct {
-	ID           string `json:"id"`
-	Email        string `json:"email"`
-	PasswordHash string `json:"-"`
-	Role         string `json:"role"`
+	ID           string `db:"id" json:"id"`
+	Email        string `db:"email" json:"email"`
+	PasswordHash string `db:"password_hash" json:"-"`
+	Role         string `db:"role" json:"role"`
 }
