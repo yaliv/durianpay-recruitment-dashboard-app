@@ -1,12 +1,11 @@
 package start
 
 import (
-	"database/sql"
-
+	"github.com/jmoiron/sqlx"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func seedUsers(db *sql.DB) error {
+func seedUsers(db *sqlx.DB) error {
 	var cnt int
 	row := db.QueryRow("SELECT COUNT(1) FROM users")
 	if err := row.Scan(&cnt); err != nil {
@@ -28,7 +27,7 @@ func seedUsers(db *sql.DB) error {
 	return nil
 }
 
-func seedPayments(db *sql.DB) error {
+func seedPayments(db *sqlx.DB) error {
 	var cnt int
 	row := db.QueryRow("SELECT COUNT(1) FROM payments")
 	if err := row.Scan(&cnt); err != nil {

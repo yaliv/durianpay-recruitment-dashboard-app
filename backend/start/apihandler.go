@@ -1,8 +1,9 @@
 package start
 
 import (
-	"database/sql"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 
 	"github.com/durianpay/fullstack-boilerplate/internal/api"
 	"github.com/durianpay/fullstack-boilerplate/internal/config"
@@ -11,7 +12,7 @@ import (
 	au "github.com/durianpay/fullstack-boilerplate/internal/module/auth/usecase"
 )
 
-func SetupAPIHandler(db *sql.DB) *api.APIHandler {
+func SetupAPIHandler(db *sqlx.DB) *api.APIHandler {
 	JwtExpiredDuration, err := time.ParseDuration(config.JwtExpired)
 	if err != nil {
 		panic(err)

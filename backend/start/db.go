@@ -1,11 +1,12 @@
 package start
 
 import (
-	"database/sql"
 	"time"
+
+	"github.com/jmoiron/sqlx"
 )
 
-func InitDB(db *sql.DB) error {
+func InitDB(db *sqlx.DB) error {
 	// create tables if not exist
 	stmts := []string{
 		createTableUsers,
