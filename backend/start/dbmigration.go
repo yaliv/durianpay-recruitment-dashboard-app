@@ -10,8 +10,8 @@ const (
 
 	createTablePayments = `CREATE TABLE IF NOT EXISTS payments (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		merchant_name TEXT NOT NULL UNIQUE,
-		date DATETIME NOT NULL,
+		created_at DATETIME NOT NULL,
+		merchant TEXT NOT NULL UNIQUE,
 		amount INTEGER NOT NULL,
 		status TEXT NOT NULL
 	);`

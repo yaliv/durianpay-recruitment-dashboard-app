@@ -34,7 +34,7 @@ func seedPayments(db *sqlx.DB) error {
 		return err
 	}
 	if cnt == 0 {
-		if _, err := db.Exec(`INSERT INTO payments (merchant_name, date, amount, status) VALUES
+		if _, err := db.Exec(`INSERT INTO payments (merchant, created_at, amount, status) VALUES
 			('Amazon', '2026-01-05 10:15:00', 120000, 'completed'),
 			('Netflix', '2026-01-07 20:30:00', 54000, 'completed'),
 			('Spotify', '2026-01-08 09:00:00', 49999, 'completed'),
