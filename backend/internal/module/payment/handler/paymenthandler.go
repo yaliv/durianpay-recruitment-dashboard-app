@@ -18,11 +18,8 @@ func NewPaymentHandler(paymentUC pu.PaymentUsecase) *PaymentHandler {
 	return &PaymentHandler{paymentUC: paymentUC}
 }
 
-func (h *PaymentHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request) {
-	var req openapigen.GetDashboardV1PaymentsParams
-	getParams(r, &req)
-
-	payments, err := h.paymentUC.GetPaymentList(&req)
+func (h *PaymentHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, body openapigen.GetDashboardV1PaymentsParams) {
+	payments, err := h.paymentUC.GetPaymentList(&body)
 	if err != nil {
 		transport.WriteError(w, err)
 		return
@@ -38,19 +35,5 @@ func (h *PaymentHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.R
 	if err != nil {
 		transport.WriteAppError(w, entity.ErrorInternal("internal server error"))
 		return
-	}
-}
-
-func getParams(r *http.Request, req *openapigen.GetDashboardV1PaymentsParams) {
-	urlV := r.URL.Query()
-
-	if urlV.Has("sort") {
-		*req.Sort = openapigen.Sort(urlV.Get("sort"))
-	}
-	if urlV.Has("status") {
-		*req.Status = urlV.Get("status")
-	}
-	if urlV.Has("id") {
-		*req.Id = urlV.Get("id")
 	}
 }
