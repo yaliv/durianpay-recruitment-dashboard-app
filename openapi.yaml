@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: MyGoLangApp API
+  title: Payment Dashboard API
   version: "1.0.0"
 servers:
   - url: http://localhost:8080
@@ -40,6 +40,7 @@ components:
     
     User:
       type: object
+      required: [email, role, token]
       properties:
         email:
           type: string
@@ -50,6 +51,7 @@ components:
 
     Payment:
       type: object
+      required: [id, merchant, status, amount, created_at]
       properties:
         id:
           type: string
@@ -97,6 +99,18 @@ components:
               value:
                 code: 401
                 message: "Unauthenticated: missing or invalid token"
+    NotFoundError:
+      description: Record not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          examples:
+            not_found:
+              summary: Record not found
+              value:
+                code: 404
+                message: Record not found
 
 paths:
   /dashboard/v1/auth/login:
@@ -142,4 +156,5 @@ paths:
           $ref: '#/components/responses/PaymentListResponse'
         "401":
           $ref: '#/components/responses/UnauthorizedError'
-
+        "404":
+          $ref: '#/components/responses/NotFoundError'

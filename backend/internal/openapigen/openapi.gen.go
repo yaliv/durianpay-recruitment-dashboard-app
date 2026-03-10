@@ -27,18 +27,18 @@ type Error struct {
 
 // Payment defines model for Payment.
 type Payment struct {
-	Amount    *string    `json:"amount,omitempty"`
-	CreatedAt *time.Time `json:"created_at,omitempty"`
-	Id        *string    `json:"id,omitempty"`
-	Merchant  *string    `json:"merchant,omitempty"`
-	Status    *string    `json:"status,omitempty"`
+	Amount    string    `json:"amount"`
+	CreatedAt time.Time `json:"created_at"`
+	Id        string    `json:"id"`
+	Merchant  string    `json:"merchant"`
+	Status    string    `json:"status"`
 }
 
 // User defines model for User.
 type User struct {
-	Email *string `json:"email,omitempty"`
-	Role  *string `json:"role,omitempty"`
-	Token *string `json:"token,omitempty"`
+	Email string `json:"email"`
+	Role  string `json:"role"`
+	Token string `json:"token"`
 }
 
 // Sort defines model for sort.
@@ -46,6 +46,9 @@ type Sort = string
 
 // LoginResponse defines model for LoginResponse.
 type LoginResponse = User
+
+// NotFoundError defines model for NotFoundError.
+type NotFoundError = Error
 
 // PaymentListResponse defines model for PaymentListResponse.
 type PaymentListResponse struct {
@@ -294,22 +297,23 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/6xW227bRhD9lcW0DzFKi1KTh4BAgbq3IIUDGG3dPqRGteaOpE25l8wunaiG/r2YXUoi",
-	"TQo23D5J5M7lnDkzw72H2hnvLNoYoLoHL0kajEjpKTiK/Ksw1KR91M5CBd87Y+R5QLaNqARbiZXGRoWZ",
-	"4ENnhZcxItlQieV5Tch2f8m4FC884Up/FsvzpfhGcNwzsZTGtZYPrRODcxnqsz8tFKA578cWaQsFWGkQ",
-	"qgyugFBv0EhGiZ+l8Q0f9VJCAXHrk30kbdew2+0KIAze2YCJ5aVba/tL94Zf1M5GtIm59L7RtWTm5YfA",
-	"9O97Gb8kXEEFX5THIpb5NJTXASknG1aPMLZkRXR/oxXSKtEGJKHtypFJeWBXwJXcGrTxUof4LGCenEeK",
-	"GjtRU7T0X0c04THsXXpG0hVPEskt7I4v3O0HrOMUwc5ZMHiOcG1lGzeO9D+ofiRy9AQmnZQJaJv80UY2",
-	"QpWItsZI2kIF73QI2q6F4xLeyUarXFko4E42bVc1hVC9mi8KMBiCXDP+62HUSphTkRLFp2me6U3U5OKY",
-	"SzsrVlI3qDjVPmtNqNhANgGO+RL/Q82GomZWva5PBDt1tI245v7rUe4PyNPZj8eHp+djq4mleJ9hHLPc",
-	"jBrk0MxjCnnuh8hko2v8tnue1c6MERTQG+/qHvLkQAVKRjyP2uCUj1bDRIspI4NUb+RDTO+6t+JiyidE",
-	"Gdsw9ODeaJCXYyE8uRpzdQuubxZ/srCj0qUlMqobGqkb/jPCQq7ByYMs5vhkYqALCFi3pOP2V27CnPIW",
-	"JSFxGx+fftrX/ec/ftsvYo6UT48ENzH6PBS85RIIHXNht2/cpbTrC+/FxdVbHlqkkEdmMZvP5gzdebTS",
-	"a6jg5Ww+ewkFeBk3CVWpZNjcOkmqvFuU3NJlw8s8lcyFJCMXLk3dW8XLyYX4w97p9wUTSusfcldjiN85",
-	"tf0Pu/a0Nl6G8MmRmlahP1M5Rs/jZnLtHl0itfjwq/b1fH5qXR3syuGnb1fAq/nica/xRk9dc1jKKar4",
-	"pONGJCriK3GgwpZD2fpfpzVOaPYG+5Jd7c2LwWXl/TToo0mZ7gu74uFtJo+vcCvRAREvHp/es1N3krwL",
-	"+t+LkdQPAezTanUiaDo4HfDmOcJPXTD+N/l1iL16hu4LinS3V6qlptsLVVk2rpbNxoVYvZ6/nsPuZvdv",
-	"AAAA//8wKAValQoAAA==",
+	"H4sIAAAAAAAC/6xW32/bNhD+V4jbHhpMsew1D4WAAct+dOjQDkG3bA9d0DDS2WYnkerxlNYL/L8PR0qW",
+	"ZClIkO4pse7X9913PPIOclfVzqJlD9kd1Jp0hYwUfnlHLH8L9DmZmo2zkMGPrqr0qUfxZSyUeKm1wbLw",
+	"CyVGZ1WtmZGsz9T1aU4ofu81X6tnNeHafFbXp9fqOyV5T9S1rlxjxWidGtm1z0/+tpCAkbofG6QdJGB1",
+	"hZBFcAn4fIuVFpT4WVd1KaZBSUiAd3XwZzJ2A/v9PgFCXzvrMbB87TbGvm2/yIfcWUYbmOu6Lk2uhXn6",
+	"wQv9u0HFrwnXkMFXad/ENFp9eumRYrFx9wi5IavY/YNWaVuoxiMpY9eOqlAH9gn85vila2zxM5GjR0Bq",
+	"qQc61vH7tQQHrE1VadpBBm8xd1Qo61hFawK3umxawgVCdrY8S6BC7/UG5wICmceRj7hn2E+TJnChdxVa",
+	"fm08P0mFmlyNxAbbCQ7Zwv+GsfIPYW3LC5J2UjSR3sG+/+BuPmDOc3zaYCXgJcOl1Q1vHZl/8UniNSEe",
+	"LYsTHkn4xnhv7EY5mZdbXZoijtGclKuhlJfjrJmq7sv0f2h83tcyzqq1NiUWUqqrmhMW4qBLD329wP/Q",
+	"s7GokdXgiAeCrTrGMm7ksA0oD7fB49lPd4Wsio+NIZHiXYTRV7maDMhhmKcU4pIbI9OlyfH79vcid9UU",
+	"QQKDXZbdQVwTkEGhGU/ZVDgXY4pxodWcU4WUb/UxpjftV3U+F+NZc+PHETIbJcpNkKiaXI6xu4n0N4r/",
+	"YGNNAQM8hzJJ17VRF+baHrbtpOdYaVPKPxMe5EqcNcRBmFqOAMfMbZ4uagpMOoZ5Q4Z3v8uQR1g3qAlJ",
+	"jkn/62Wn669//dHdapIpWvsGbpnreOjkyghADQcZulX0k/bbG6epUOcXr2Q1IPl4MFeL5WIpJF2NVtcG",
+	"Mni+WC6eQwK15m3AlhZdeHq7SuXgpKXcj6G5zodhkRaHs/2qkLrO86HmnyuhFW5UiB1Dzz+4YvcFG/1+",
+	"FWvt/SdHxeP1OkRczS73PoSpweOHwrfL5X1L8eCXjl8T+wTOlquHo6b3Rpidw+oPWdUnw1sVqKhv1IGK",
+	"eI5lG96BG5zR7BccSnbRuSej99+7edC9SxqeYPvk+IEYT69ya9UCUc8e3hEn9z3zulXQj8dE6mMAXdmw",
+	"VuaSBsP9Ca+eIvzcM+YL5JfIs4cjxy/Fo6Exngcq+PZ2R7rt9G2obHdKlqaly3W5dZ6zF8sXS9hf7f8L",
+	"AAD//89V7F8eDAAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file
