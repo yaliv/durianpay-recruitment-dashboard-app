@@ -37,3 +37,17 @@ func (h *PaymentHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.R
 		return
 	}
 }
+
+func (h *PaymentHandler) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
+	paymentSummaryRes, err := h.paymentUC.GetPaymentSummary()
+	if err != nil {
+		transport.WriteError(w, err)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(paymentSummaryRes)
+	if err != nil {
+		transport.WriteAppError(w, entity.ErrorInternal("internal server error"))
+		return
+	}
+}

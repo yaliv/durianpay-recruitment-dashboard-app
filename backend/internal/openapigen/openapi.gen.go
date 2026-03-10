@@ -55,6 +55,14 @@ type PaymentListResponse struct {
 	Payments *[]Payment `json:"payments,omitempty"`
 }
 
+// PaymentSummaryResponse defines model for PaymentSummaryResponse.
+type PaymentSummaryResponse struct {
+	Completed  int `json:"completed"`
+	Failed     int `json:"failed"`
+	Processing int `json:"processing"`
+	Total      int `json:"total"`
+}
+
 // UnauthorizedError defines model for UnauthorizedError.
 type UnauthorizedError = Error
 
@@ -87,6 +95,9 @@ type ServerInterface interface {
 	// List of payments
 	// (GET /dashboard/v1/payments)
 	GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, params GetDashboardV1PaymentsParams)
+	// Show total payments and breakdown
+	// (GET /dashboard/v1/payments/summary)
+	GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -102,6 +113,12 @@ func (_ Unimplemented) PostDashboardV1AuthLogin(w http.ResponseWriter, r *http.R
 // List of payments
 // (GET /dashboard/v1/payments)
 func (_ Unimplemented) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, params GetDashboardV1PaymentsParams) {
+	w.WriteHeader(http.StatusNotImplemented)
+}
+
+// Show total payments and breakdown
+// (GET /dashboard/v1/payments/summary)
+func (_ Unimplemented) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -162,6 +179,20 @@ func (siw *ServerInterfaceWrapper) GetDashboardV1Payments(w http.ResponseWriter,
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetDashboardV1Payments(w, r, params)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetDashboardV1PaymentsSummary operation middleware
+func (siw *ServerInterfaceWrapper) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetDashboardV1PaymentsSummary(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -290,6 +321,9 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	r.Group(func(r chi.Router) {
 		r.Get(options.BaseURL+"/dashboard/v1/payments", wrapper.GetDashboardV1Payments)
 	})
+	r.Group(func(r chi.Router) {
+		r.Get(options.BaseURL+"/dashboard/v1/payments/summary", wrapper.GetDashboardV1PaymentsSummary)
+	})
 
 	return r
 }
@@ -297,23 +331,24 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"H4sIAAAAAAAC/6xW32/bNhD+V4jbHhpMsew1D4WAAct+dOjQDkG3bA9d0DDS2WYnkerxlNYL/L8PR0qW",
-	"ZClIkO4pse7X9913PPIOclfVzqJlD9kd1Jp0hYwUfnlHLH8L9DmZmo2zkMGPrqr0qUfxZSyUeKm1wbLw",
-	"CyVGZ1WtmZGsz9T1aU4ofu81X6tnNeHafFbXp9fqOyV5T9S1rlxjxWidGtm1z0/+tpCAkbofG6QdJGB1",
-	"hZBFcAn4fIuVFpT4WVd1KaZBSUiAd3XwZzJ2A/v9PgFCXzvrMbB87TbGvm2/yIfcWUYbmOu6Lk2uhXn6",
-	"wQv9u0HFrwnXkMFXad/ENFp9eumRYrFx9wi5IavY/YNWaVuoxiMpY9eOqlAH9gn85vila2zxM5GjR0Bq",
-	"qQc61vH7tQQHrE1VadpBBm8xd1Qo61hFawK3umxawgVCdrY8S6BC7/UG5wICmceRj7hn2E+TJnChdxVa",
-	"fm08P0mFmlyNxAbbCQ7Zwv+GsfIPYW3LC5J2UjSR3sG+/+BuPmDOc3zaYCXgJcOl1Q1vHZl/8UniNSEe",
-	"LYsTHkn4xnhv7EY5mZdbXZoijtGclKuhlJfjrJmq7sv0f2h83tcyzqq1NiUWUqqrmhMW4qBLD329wP/Q",
-	"s7GokdXgiAeCrTrGMm7ksA0oD7fB49lPd4Wsio+NIZHiXYTRV7maDMhhmKcU4pIbI9OlyfH79vcid9UU",
-	"QQKDXZbdQVwTkEGhGU/ZVDgXY4pxodWcU4WUb/UxpjftV3U+F+NZc+PHETIbJcpNkKiaXI6xu4n0N4r/",
-	"YGNNAQM8hzJJ17VRF+baHrbtpOdYaVPKPxMe5EqcNcRBmFqOAMfMbZ4uagpMOoZ5Q4Z3v8uQR1g3qAlJ",
-	"jkn/62Wn669//dHdapIpWvsGbpnreOjkyghADQcZulX0k/bbG6epUOcXr2Q1IPl4MFeL5WIpJF2NVtcG",
-	"Mni+WC6eQwK15m3AlhZdeHq7SuXgpKXcj6G5zodhkRaHs/2qkLrO86HmnyuhFW5UiB1Dzz+4YvcFG/1+",
-	"FWvt/SdHxeP1OkRczS73PoSpweOHwrfL5X1L8eCXjl8T+wTOlquHo6b3Rpidw+oPWdUnw1sVqKhv1IGK",
-	"eI5lG96BG5zR7BccSnbRuSej99+7edC9SxqeYPvk+IEYT69ya9UCUc8e3hEn9z3zulXQj8dE6mMAXdmw",
-	"VuaSBsP9Ca+eIvzcM+YL5JfIs4cjxy/Fo6Exngcq+PZ2R7rt9G2obHdKlqaly3W5dZ6zF8sXS9hf7f8L",
-	"AAD//89V7F8eDAAA",
+	"H4sIAAAAAAAC/6xXbW/cNgz+K4K2Dy3mnH1NBhQGBix76dChHYJm2T50QaPYvDu1tuRSdNJbcP99oPz+",
+	"crs0yaf2LFJ8HpIPxdzJxOaFNWDIyfhOFgpVDgTofzmLxP+m4BLUBWlrZCx/tnmujhywLUEq2EqsNGSp",
+	"Wwg+tEYUigjQuFhcHSUIbPdB0ZV4ViCs9BdxdXQlfhB873NxpXJbGj40VgzOlUue/2NkIDXH/VwCbmUg",
+	"jcpBxhW4QLpkA7lilPBF5UXGR72QMpC0Lbw9oTZrudvtAongCmsceJZv7Fqbd/UX/pBYQ2A8c1UUmU4U",
+	"Mw8/OqZ/14v4LcJKxvKbsEtiWJ268MIBVsGG2UOgEo0g+wmMUCYVpQMU2qws5j6O3AXyD0uvbGnSXxEt",
+	"3gNSTd3TMZY+rNjZYy3zXOFWxvIdJBZTYSyJ6jSQNyora8IpyPgkOglkDs6pNcw5eDL3I1/hnmE/vTSQ",
+	"Z2qbg6E32tGDqlCgLQBJQ93B/jb/f02Qu0NY6/CMpO4Uhai2ctd9sNcfIaE5PrWzYPA9LudV2p+ADgPO",
+	"gCAddPjxcYtNG4I1t1ogV0pnI8MXc3YF2gScYzX0bb+fsyVLKhuYnURTOy+pz6VGDv++dgp64AdBW6SX",
+	"X5HhOqWM6cKokjYW9b/wIIWU3h8MsRGMdPJWe5DCsihvVKbTSqtzeln29XIxvDUW+b6bnkJIp10sbY2o",
+	"EsqhmqgJQsoGKnOyi+f5tzkbt1oKo0ov51qipdwfufdnPx3Iw+bxMLoo0x5pVTalUL0kQ2Qq0wn8WP9e",
+	"JDafIghk78GI72Q1i2UsU0VwRDqHOR89lJpczhnlgMlGjTG9rb+K0zkfR4pKN/RopSQC0UlJBJzfWk2H",
+	"EqtT2cPThgmarA2yMJd2/6RNcg650n5CTHigzWD2oGqE6ckIcHVzfU/jNTMzAukgKVHT9pybvIJ1DQoB",
+	"WSbdr1dNXX//+89mdeCbqtMugRuiohIdv8seqCZfhmYa/aLc5toqTMXp2WseDYCuEuZyES0iJmkLMKrQ",
+	"MpbHi2hxzCNQ0cZjC9PGPbxZhiycMOMlxCfXOt8snGKv7dcpx7WO2ph/LZmWX1tklTFw9JNNt494Z/ZX",
+	"sVDO3VpM71+v1mN+vncuhCWMt7EXUbRvKLZ24XBl2wXyJFoe9pq+G7532tHvbxW3mjbCUxHfiZYKWw7L",
+	"1l801jBTs9+gX7KzxjwYLNnv50F3JqHfc3fBeAuv1CvsStRAxLPDM+L5vl26GQVde0xKPQbQhPVjZe5S",
+	"f7D/wsuHFH5uV3xE+dnz5LDncB0fNY121KuC+59OCVuvr+qYZvN5RL7G++hTKeZ8Y2+F3/Za/v5vmmsE",
+	"9Sm1t82uA3jTdHuJWT1h4zDMbKKyjXUUv4xeRnJ3ufsvAAD///Ggj7aRDgAA",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

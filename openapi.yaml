@@ -87,6 +87,27 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/Payment'
+    PaymentSummaryResponse:
+      description: Payment Summary
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [total, completed, processing, failed]
+            properties:
+              total:
+                type: integer
+                example: 40
+              completed:
+                type: integer
+                example: 33
+              processing:
+                type: integer
+                example: 5
+              failed:
+                type: integer
+                example: 2
+
     UnauthorizedError:
       description: Authentication failed or missing credentials
       content:
@@ -158,3 +179,14 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
         "404":
           $ref: '#/components/responses/NotFoundError'
+
+  /dashboard/v1/payments/summary:
+    get:
+      summary: Show total payments and breakdown
+      # security:
+      #   - bearerAuth: []
+      responses:
+        "200":
+          $ref: '#/components/responses/PaymentSummaryResponse'
+        "401":
+          $ref: '#/components/responses/UnauthorizedError'
