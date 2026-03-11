@@ -27,7 +27,7 @@ func NewPaymentRepo(db *sqlx.DB) *Payment {
 func (r *Payment) GetPaymentByID(id string) (*entity.Payment, error) {
 	var p entity.Payment
 
-	q := `SELECT id, merchant_name, date, amount, status FROM payments WHERE id = ?`
+	q := `SELECT id, merchant, created_at, amount, status FROM payments WHERE id = ?`
 	if err := r.db.Get(&p, q, id); err != nil {
 		if err == sql.ErrNoRows {
 			return nil, entity.ErrorNotFound("Record not found")
@@ -41,7 +41,7 @@ func (r *Payment) GetPaymentByID(id string) (*entity.Payment, error) {
 func (r *Payment) AllPayments(status *string, sort *string) ([]*entity.Payment, error) {
 	var ps []*entity.Payment
 
-	q := `SELECT id, merchant_name, date, amount, status FROM payments`
+	q := `SELECT id, merchant, created_at, amount, status FROM payments`
 	var params []any
 
 	if status != nil {
@@ -52,7 +52,7 @@ func (r *Payment) AllPayments(status *string, sort *string) ([]*entity.Payment, 
 		queryhelper.AppendOrderBy(&q, *sort)
 	}
 
-	if err := r.db.Get(&ps, q, params...); err != nil {
+	if err := r.db.Select(&ps, q, params...); err != nil {
 		return nil, entity.WrapError(err, entity.ErrorCodeInternal, "db error")
 	}
 
