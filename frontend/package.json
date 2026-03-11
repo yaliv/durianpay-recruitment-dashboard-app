@@ -12,7 +12,8 @@
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev -p 5000",
     "build": "quasar build",
-    "postinstall": "quasar prepare"
+    "postinstall": "quasar prepare",
+    "openapi-copy-gen": "cp ../openapi.yaml src/openapi/ && openapi typegen --client src/openapi/openapi.yaml > src/openapi/openapi.d.ts"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
