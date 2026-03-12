@@ -4,7 +4,7 @@
       <q-toolbar>
         <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
 
-        <q-toolbar-title> Payment Dashboard </q-toolbar-title>
+        <q-toolbar-title> Payment Dashboard - {{ $route.name }} </q-toolbar-title>
 
         <q-btn flat dense round icon="logout" aria-label="Logout" @click="logout">
           <q-tooltip> Logout </q-tooltip>
