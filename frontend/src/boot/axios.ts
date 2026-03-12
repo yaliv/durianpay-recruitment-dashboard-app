@@ -2,12 +2,10 @@ import { defineBoot } from '#q-app/wrappers';
 import axios, { type AxiosInstance } from 'axios';
 import OpenAPIClientAxios from 'openapi-client-axios';
 
-import type { Client as PaymentDashboardClient } from '../openapi/openapi';
-
 declare module 'vue' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
-    $api: PaymentDashboardClient;
+    $api: OpenAPIClientAxios;
   }
 }
 
@@ -18,8 +16,8 @@ declare module 'vue' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 // const api = axios.create({ baseURL: 'https://api.example.com' });
-const api = new OpenAPIClientAxios({ definition: 'http://localhost:8080' });
-const client = await api.init<PaymentDashboardClient>();
+const api = new OpenAPIClientAxios({ definition: './src/openapi/openapi.yaml' });
+await api.init();
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -28,7 +26,7 @@ export default defineBoot(({ app }) => {
   // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
   //       so you won't necessarily have to import axios in each vue file
 
-  app.config.globalProperties.$api = client;
+  app.config.globalProperties.$api = api;
   // ^ ^ ^ this will allow you to use this.$api (for Vue Options API form)
   //       so you can easily perform requests against your app's API
 });
