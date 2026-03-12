@@ -40,7 +40,10 @@ export default defineConfig((/* ctx */) => {
       typescript: {
         strict: true,
         vueShim: true,
-        // extendTsConfig (tsConfig) {}
+        extendTsConfig(tsConfig) {
+          tsConfig.compilerOptions!.paths['openapi'] = ['./../src/openapi'];
+          tsConfig.compilerOptions!.paths['openapi/*'] = ['./../src/openapi/*'];
+        },
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
