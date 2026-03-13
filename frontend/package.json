@@ -13,7 +13,7 @@
     "dev": "quasar dev -p 5000",
     "build": "quasar build",
     "postinstall": "quasar prepare",
-    "openapi-copy-gen": "cp ../openapi.yaml src/openapi/ && openapi typegen --client src/openapi/openapi.yaml > src/openapi/openapi.d.ts"
+    "openapi-copy-gen": "cp ../openapi.yaml public/ && openapi typegen --client ../openapi.yaml > src/openapi/openapi.d.ts"
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
