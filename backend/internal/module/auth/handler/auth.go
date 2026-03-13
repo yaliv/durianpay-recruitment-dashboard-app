@@ -21,8 +21,8 @@ func NewAuthHandler(authUC authUsecase.AuthUsecase) *AuthHandler {
 	}
 }
 
-func (a *AuthHandler) PostDashboardV1AuthLogin(w http.ResponseWriter, r *http.Request) {
-	var req openapigen.PostDashboardV1AuthLoginJSONBody
+func (a *AuthHandler) Login(w http.ResponseWriter, r *http.Request) {
+	var req openapigen.LoginJSONBody
 	if !decodeJSONBody(w, r, &req) {
 		return
 	}

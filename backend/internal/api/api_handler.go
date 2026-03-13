@@ -15,14 +15,14 @@ type APIHandler struct {
 
 var _ openapigen.ServerInterface = (*APIHandler)(nil)
 
-func (h *APIHandler) PostDashboardV1AuthLogin(w http.ResponseWriter, r *http.Request) {
-	h.Auth.PostDashboardV1AuthLogin(w, r)
+func (h *APIHandler) Login(w http.ResponseWriter, r *http.Request) {
+	h.Auth.Login(w, r)
 }
 
-func (h *APIHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, body openapigen.GetDashboardV1PaymentsParams) {
-	h.Payment.GetDashboardV1Payments(w, r, body)
+func (h *APIHandler) GetPaymentList(w http.ResponseWriter, r *http.Request, body openapigen.GetPaymentListParams) {
+	h.Payment.GetPaymentList(w, r, body)
 }
 
-func (h *APIHandler) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
-	h.Payment.GetDashboardV1PaymentsSummary(w, r)
+func (h *APIHandler) GetPaymentSummary(w http.ResponseWriter, r *http.Request) {
+	h.Payment.GetPaymentSummary(w, r)
 }

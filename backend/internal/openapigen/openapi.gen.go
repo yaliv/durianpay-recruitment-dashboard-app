@@ -66,14 +66,14 @@ type PaymentSummaryResponse struct {
 // UnauthorizedError defines model for UnauthorizedError.
 type UnauthorizedError = Error
 
-// PostDashboardV1AuthLoginJSONBody defines parameters for PostDashboardV1AuthLogin.
-type PostDashboardV1AuthLoginJSONBody struct {
+// LoginJSONBody defines parameters for Login.
+type LoginJSONBody struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-// GetDashboardV1PaymentsParams defines parameters for GetDashboardV1Payments.
-type GetDashboardV1PaymentsParams struct {
+// GetPaymentListParams defines parameters for GetPaymentList.
+type GetPaymentListParams struct {
 	// Sort Comma-separated sort fields. Common patterns: `-created_at` (prefix `-` = desc) `amount` (no prefix `-` = asc)
 	Sort *Sort `form:"sort,omitempty" json:"sort,omitempty"`
 
@@ -84,20 +84,20 @@ type GetDashboardV1PaymentsParams struct {
 	Id *string `form:"id,omitempty" json:"id,omitempty"`
 }
 
-// PostDashboardV1AuthLoginJSONRequestBody defines body for PostDashboardV1AuthLogin for application/json ContentType.
-type PostDashboardV1AuthLoginJSONRequestBody PostDashboardV1AuthLoginJSONBody
+// LoginJSONRequestBody defines body for Login for application/json ContentType.
+type LoginJSONRequestBody LoginJSONBody
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Login with email + password
 	// (POST /dashboard/v1/auth/login)
-	PostDashboardV1AuthLogin(w http.ResponseWriter, r *http.Request)
+	Login(w http.ResponseWriter, r *http.Request)
 	// List of payments
 	// (GET /dashboard/v1/payments)
-	GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, params GetDashboardV1PaymentsParams)
+	GetPaymentList(w http.ResponseWriter, r *http.Request, params GetPaymentListParams)
 	// Show total payments and breakdown
 	// (GET /dashboard/v1/payments/summary)
-	GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request)
+	GetPaymentSummary(w http.ResponseWriter, r *http.Request)
 }
 
 // Unimplemented server implementation that returns http.StatusNotImplemented for each endpoint.
@@ -106,19 +106,19 @@ type Unimplemented struct{}
 
 // Login with email + password
 // (POST /dashboard/v1/auth/login)
-func (_ Unimplemented) PostDashboardV1AuthLogin(w http.ResponseWriter, r *http.Request) {
+func (_ Unimplemented) Login(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // List of payments
 // (GET /dashboard/v1/payments)
-func (_ Unimplemented) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, params GetDashboardV1PaymentsParams) {
+func (_ Unimplemented) GetPaymentList(w http.ResponseWriter, r *http.Request, params GetPaymentListParams) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
 // Show total payments and breakdown
 // (GET /dashboard/v1/payments/summary)
-func (_ Unimplemented) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
+func (_ Unimplemented) GetPaymentSummary(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotImplemented)
 }
 
@@ -131,11 +131,11 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(http.Handler) http.Handler
 
-// PostDashboardV1AuthLogin operation middleware
-func (siw *ServerInterfaceWrapper) PostDashboardV1AuthLogin(w http.ResponseWriter, r *http.Request) {
+// Login operation middleware
+func (siw *ServerInterfaceWrapper) Login(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.PostDashboardV1AuthLogin(w, r)
+		siw.Handler.Login(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -145,13 +145,13 @@ func (siw *ServerInterfaceWrapper) PostDashboardV1AuthLogin(w http.ResponseWrite
 	handler.ServeHTTP(w, r)
 }
 
-// GetDashboardV1Payments operation middleware
-func (siw *ServerInterfaceWrapper) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request) {
+// GetPaymentList operation middleware
+func (siw *ServerInterfaceWrapper) GetPaymentList(w http.ResponseWriter, r *http.Request) {
 
 	var err error
 
 	// Parameter object where we will unmarshal all parameters from the context
-	var params GetDashboardV1PaymentsParams
+	var params GetPaymentListParams
 
 	// ------------- Optional query parameter "sort" -------------
 
@@ -178,7 +178,7 @@ func (siw *ServerInterfaceWrapper) GetDashboardV1Payments(w http.ResponseWriter,
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetDashboardV1Payments(w, r, params)
+		siw.Handler.GetPaymentList(w, r, params)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -188,11 +188,11 @@ func (siw *ServerInterfaceWrapper) GetDashboardV1Payments(w http.ResponseWriter,
 	handler.ServeHTTP(w, r)
 }
 
-// GetDashboardV1PaymentsSummary operation middleware
-func (siw *ServerInterfaceWrapper) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
+// GetPaymentSummary operation middleware
+func (siw *ServerInterfaceWrapper) GetPaymentSummary(w http.ResponseWriter, r *http.Request) {
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.GetDashboardV1PaymentsSummary(w, r)
+		siw.Handler.GetPaymentSummary(w, r)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -316,13 +316,13 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 	}
 
 	r.Group(func(r chi.Router) {
-		r.Post(options.BaseURL+"/dashboard/v1/auth/login", wrapper.PostDashboardV1AuthLogin)
+		r.Post(options.BaseURL+"/dashboard/v1/auth/login", wrapper.Login)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/dashboard/v1/payments", wrapper.GetDashboardV1Payments)
+		r.Get(options.BaseURL+"/dashboard/v1/payments", wrapper.GetPaymentList)
 	})
 	r.Group(func(r chi.Router) {
-		r.Get(options.BaseURL+"/dashboard/v1/payments/summary", wrapper.GetDashboardV1PaymentsSummary)
+		r.Get(options.BaseURL+"/dashboard/v1/payments/summary", wrapper.GetPaymentSummary)
 	})
 
 	return r
@@ -331,24 +331,24 @@ func HandlerWithOptions(si ServerInterface, options ChiServerOptions) http.Handl
 // Base64 encoded, gzipped, json marshaled Swagger object
 var swaggerSpec = []string{
 
-	"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",
+	"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",
 }
 
 // GetSwagger returns the content of the embedded swagger specification file

@@ -95,65 +95,107 @@ declare namespace Components {
     }
 }
 declare namespace Paths {
-    namespace DashboardV1AuthLogin {
-        namespace Post {
-            export interface RequestBody {
-                email: string;
-                password: string;
-            }
-            namespace Responses {
-                export type $200 = Components.Responses.LoginResponse;
-                export type $401 = Components.Responses.UnauthorizedError;
-            }
+    namespace GetPaymentList {
+        namespace Parameters {
+            export type Id = string;
+            /**
+             * example:
+             * -created_at
+             */
+            export type Sort = string;
+            export type Status = string;
+        }
+        export interface QueryParameters {
+            sort?: /**
+             * example:
+             * -created_at
+             */
+            Parameters.Sort;
+            status?: Parameters.Status;
+            id?: Parameters.Id;
+        }
+        namespace Responses {
+            export type $200 = Components.Responses.PaymentListResponse;
+            export type $401 = Components.Responses.UnauthorizedError;
+            export type $404 = Components.Responses.NotFoundError;
         }
     }
-    namespace DashboardV1Payments {
-        namespace Get {
-            namespace Parameters {
-                export type Id = string;
-                /**
-                 * example:
-                 * -created_at
-                 */
-                export type Sort = string;
-                export type Status = string;
-            }
-            export interface QueryParameters {
-                sort?: /**
-                 * example:
-                 * -created_at
-                 */
-                Parameters.Sort;
-                status?: Parameters.Status;
-                id?: Parameters.Id;
-            }
-            namespace Responses {
-                export type $200 = Components.Responses.PaymentListResponse;
-                export type $401 = Components.Responses.UnauthorizedError;
-                export type $404 = Components.Responses.NotFoundError;
-            }
+    namespace GetPaymentSummary {
+        namespace Responses {
+            export type $200 = Components.Responses.PaymentSummaryResponse;
+            export type $401 = Components.Responses.UnauthorizedError;
         }
     }
-    namespace DashboardV1PaymentsSummary {
-        namespace Get {
-            namespace Responses {
-                export type $200 = Components.Responses.PaymentSummaryResponse;
-                export type $401 = Components.Responses.UnauthorizedError;
-            }
+    namespace Login {
+        export interface RequestBody {
+            email: string;
+            password: string;
+        }
+        namespace Responses {
+            export type $200 = Components.Responses.LoginResponse;
+            export type $401 = Components.Responses.UnauthorizedError;
         }
     }
 }
 
 
 export interface OperationMethods {
+  /**
+   * login - Login with email + password
+   */
+  'login'(
+    parameters?: Parameters<UnknownParamsObject> | null,
+    data?: Paths.Login.RequestBody,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.Login.Responses.$200>
+  /**
+   * getPaymentList - List of payments
+   */
+  'getPaymentList'(
+    parameters?: Parameters<Paths.GetPaymentList.QueryParameters> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.GetPaymentList.Responses.$200>
+  /**
+   * getPaymentSummary - Show total payments and breakdown
+   */
+  'getPaymentSummary'(
+    parameters?: Parameters<UnknownParamsObject> | null,
+    data?: any,
+    config?: AxiosRequestConfig  
+  ): OperationResponse<Paths.GetPaymentSummary.Responses.$200>
 }
 
 export interface PathsDictionary {
   ['/dashboard/v1/auth/login']: {
+    /**
+     * login - Login with email + password
+     */
+    'post'(
+      parameters?: Parameters<UnknownParamsObject> | null,
+      data?: Paths.Login.RequestBody,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.Login.Responses.$200>
   }
   ['/dashboard/v1/payments']: {
+    /**
+     * getPaymentList - List of payments
+     */
+    'get'(
+      parameters?: Parameters<Paths.GetPaymentList.QueryParameters> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.GetPaymentList.Responses.$200>
   }
   ['/dashboard/v1/payments/summary']: {
+    /**
+     * getPaymentSummary - Show total payments and breakdown
+     */
+    'get'(
+      parameters?: Parameters<UnknownParamsObject> | null,
+      data?: any,
+      config?: AxiosRequestConfig  
+    ): OperationResponse<Paths.GetPaymentSummary.Responses.$200>
   }
 }
 

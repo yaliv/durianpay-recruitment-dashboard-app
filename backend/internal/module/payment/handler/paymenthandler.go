@@ -18,7 +18,7 @@ func NewPaymentHandler(paymentUC pu.PaymentUsecase) *PaymentHandler {
 	return &PaymentHandler{paymentUC: paymentUC}
 }
 
-func (h *PaymentHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.Request, body openapigen.GetDashboardV1PaymentsParams) {
+func (h *PaymentHandler) GetPaymentList(w http.ResponseWriter, r *http.Request, body openapigen.GetPaymentListParams) {
 	payments, err := h.paymentUC.GetPaymentList(&body)
 	if err != nil {
 		transport.WriteError(w, err)
@@ -38,7 +38,7 @@ func (h *PaymentHandler) GetDashboardV1Payments(w http.ResponseWriter, r *http.R
 	}
 }
 
-func (h *PaymentHandler) GetDashboardV1PaymentsSummary(w http.ResponseWriter, r *http.Request) {
+func (h *PaymentHandler) GetPaymentSummary(w http.ResponseWriter, r *http.Request) {
 	paymentSummaryRes, err := h.paymentUC.GetPaymentSummary()
 	if err != nil {
 		transport.WriteError(w, err)

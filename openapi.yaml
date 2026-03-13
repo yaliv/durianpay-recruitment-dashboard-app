@@ -136,6 +136,7 @@ components:
 paths:
   /dashboard/v1/auth/login:
     post:
+      operationId: login
       summary: Login with email + password
       requestBody:
         required: true
@@ -157,6 +158,7 @@ paths:
 
   /dashboard/v1/payments:
     get:
+      operationId: getPaymentList
       summary: List of payments
       parameters:
         - $ref: '#/components/parameters/sort'
@@ -182,6 +184,7 @@ paths:
 
   /dashboard/v1/payments/summary:
     get:
+      operationId: getPaymentSummary
       summary: Show total payments and breakdown
       # security:
       #   - bearerAuth: []

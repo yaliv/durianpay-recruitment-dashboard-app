@@ -8,7 +8,7 @@ import (
 
 type (
 	PaymentUsecase interface {
-		GetPaymentList(params *openapigen.GetDashboardV1PaymentsParams) ([]*entity.Payment, error)
+		GetPaymentList(params *openapigen.GetPaymentListParams) ([]*entity.Payment, error)
 		GetPaymentSummary() (*openapigen.PaymentSummaryResponse, error)
 	}
 
@@ -21,7 +21,7 @@ func NewPaymentUsecase(repo pr.PaymentRepository) *Payment {
 	return &Payment{repo: repo}
 }
 
-func (uc *Payment) GetPaymentList(params *openapigen.GetDashboardV1PaymentsParams) ([]*entity.Payment, error) {
+func (uc *Payment) GetPaymentList(params *openapigen.GetPaymentListParams) ([]*entity.Payment, error) {
 	if params.Id != nil {
 		p, err := uc.repo.GetPaymentByID(*params.Id)
 		if err != nil {
