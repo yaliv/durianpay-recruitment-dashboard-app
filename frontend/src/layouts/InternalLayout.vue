@@ -21,7 +21,10 @@
     </q-drawer>
 
     <q-page-container>
-      <Suspense>
+      <q-page padding v-if="errMessage">
+        <h3 class="text-negative">{{ errMessage }}</h3>
+      </q-page>
+      <Suspense v-else>
         <router-view />
       </Suspense>
     </q-page-container>
@@ -29,12 +32,15 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, watch, onErrorCaptured } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { isAxiosError } from 'axios';
+
 import { useAuthStore } from 'stores/auth';
 import NavigationItem, { type NavigationItemProps } from 'components/NavigationItem.vue';
 
 const router = useRouter();
+const route = useRoute();
 const auth = useAuthStore();
 
 const linksList: NavigationItemProps[] = [
@@ -62,4 +68,24 @@ async function logout() {
   auth.logout();
   return router.push('/login');
 }
+
+// ----- Error handling -----
+
+const errMessage = ref('');
+
+watch(
+  () => route.path,
+  () => (errMessage.value = ''),
+);
+
+onErrorCaptured((err) => {
+  if (isAxiosError(err)) {
+    errMessage.value = err.response ? 'Server Error' : 'Network Error';
+  } else {
+    errMessage.value = 'Unexpected Error';
+  }
+
+  // Returning false stops the error from propagating further up the chain.
+  return false;
+});
 </script>
