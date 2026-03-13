@@ -5,7 +5,6 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 
 	"github.com/durianpay/fullstack-boilerplate/internal/config"
@@ -14,8 +13,6 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load()
-
 	db, err := sqlx.Connect("sqlite3", "dashboard.db?_foreign_keys=1")
 	if err != nil {
 		log.Fatal(err)
