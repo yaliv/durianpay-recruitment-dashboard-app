@@ -1,14 +1,14 @@
 <template>
   <q-page padding>
-    <h3>Welcome!</h3>
+    <h3 class="text-primary">Welcome!</h3>
     <table class="text-subtitle1">
       <tbody>
         <tr>
-          <td class="text-bold q-pr-sm">Email:</td>
+          <td class="text-bold text-primary q-pr-sm">Email:</td>
           <td>{{ auth.user?.email }}</td>
         </tr>
         <tr>
-          <td class="text-bold q-pr-sm">Role:</td>
+          <td class="text-bold text-primary q-pr-sm">Role:</td>
           <td>{{ auth.user?.role }}</td>
         </tr>
       </tbody>
