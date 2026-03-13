@@ -3,9 +3,11 @@
   "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "[typescript]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.rulers": [100]
   },
   "[vue]": {
-    "editor.defaultFormatter": "oxc.oxc-vscode"
+    "editor.defaultFormatter": "oxc.oxc-vscode",
+    "editor.rulers": [100]
   }
 }
