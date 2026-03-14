@@ -23,7 +23,7 @@ run:
 	CGO_ENABLED=1 $(go_bin) run main.go
 
 build:
-	CGO_ENABLED=1 $(go_bin) build -o bin/mygolangapp main.go
+	CGO_ENABLED=1 $(go_bin) build -tags netgo -ldflags '-s -w' -o bin/app
 
 tool-openapi:
 	@go install github.com/oapi-codegen/oapi-codegen/v2/cmd/oapi-codegen@latest
