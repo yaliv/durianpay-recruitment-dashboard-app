@@ -24,9 +24,18 @@
       <q-page padding v-if="errMessage">
         <h3 class="text-negative">{{ errMessage }}</h3>
       </q-page>
-      <Suspense v-else>
-        <router-view />
-      </Suspense>
+
+      <router-view v-else v-slot="{ Component }">
+        <suspense timeout="0">
+          <component :is="Component" />
+
+          <template #fallback>
+            <q-page padding>
+              <h3 class="text-info">Loading content...</h3>
+            </q-page>
+          </template>
+        </suspense>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>
