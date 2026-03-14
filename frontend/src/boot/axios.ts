@@ -16,7 +16,10 @@ declare module 'vue' {
 // "export default () => {}" function below (which runs individually
 // for each client)
 // const api = axios.create({ baseURL: 'https://api.example.com' });
-const api = new OpenAPIClientAxios({ definition: '/openapi.yaml' });
+const api = new OpenAPIClientAxios({
+  definition: '/openapi.yaml',
+  withServer: process.env.USE_SERVER || 0,
+});
 await api.init();
 
 export default defineBoot(({ app }) => {
