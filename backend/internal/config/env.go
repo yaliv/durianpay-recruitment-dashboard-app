@@ -12,6 +12,7 @@ var (
 	JwtSecret           = []byte(getEnv("JWT_SECRET", "dev-secret-replace-me"))
 	JwtExpired          = getEnv("JWT_EXPIRED", "24h")
 	HttpAddress         = getEnv("HTTP_ADDR", ":8080")
+	Port                = getEnv("PORT", "8080")
 	CorsAllowedOrigins  = getEnv("CORS_ALLOWED_ORIGINS", "")
 	OpenapiYamlLocation = getEnv("OPENAPIYAML_LOCATION", "../openapi.yaml")
 )

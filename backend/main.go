@@ -28,6 +28,9 @@ func main() {
 	server := srv.NewServer(apiHandler, config.OpenapiYamlLocation)
 
 	addr := config.HttpAddress
+	if addr == "" {
+		addr = ":" + config.Port
+	}
 	log.Printf("starting server on %s", addr)
 	server.Start(addr)
 }
